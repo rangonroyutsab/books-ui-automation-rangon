@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+
+.env
+.DS_Store
+
+test-results/*
+allure-results/*
+reports/*
+
+!test-results/.gitkeep
+!allure-results/.gitkeep
+!reports/.gitkeep
+
+.idea/
+.vscode/
