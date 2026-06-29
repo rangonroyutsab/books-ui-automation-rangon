@@ -5,3 +5,4 @@ pytest-html
 allure-pytest
 requests
 python-dotenv
+ruff
