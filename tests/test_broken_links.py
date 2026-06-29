@@ -1,4 +1,3 @@
-import requests
 import pytest
 
 from pages.home_page import HomePage
@@ -15,18 +14,24 @@ def test_homepage_links_are_not_broken(page):
 
     hrefs = home_page.get_all_links()
 
-    unique_urls = {
-        build_absolute_url(BASE_URL, href)
-        for href in hrefs
-        if not href.startswith("mailto:")
-    }
+    unique_urls = sorted(
+        {
+            build_absolute_url(BASE_URL, href)
+            for href in hrefs
+            if href
+            and not href.startswith("#")
+            and not href.startswith("mailto:")
+            and not href.startswith("javascript:")
+            and not href.startswith("tel:")
+        }
+    )
 
     broken_links = []
 
     for url in unique_urls:
-        response = requests.get(url, timeout=10)
+        response = page.request.get(url, timeout=10_000)
 
-        if response.status_code != 200:
-            broken_links.append((url, response.status_code))
+        if response.status != 200:
+            broken_links.append((url, response.status))
 
-    assert broken_links == []
+    assert broken_links == [], f"Broken links found: {broken_links}"
