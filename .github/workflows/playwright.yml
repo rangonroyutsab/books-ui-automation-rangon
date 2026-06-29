@@ -38,6 +38,7 @@ jobs:
         with:
           name: html-report
           path: reports/
+          if-no-files-found: error
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -45,6 +46,7 @@ jobs:
         with:
           name: allure-results
           path: allure-results/
+          if-no-files-found: error
 
       - name: Upload Playwright artifacts
         uses: actions/upload-artifact@v4
@@ -52,3 +54,4 @@ jobs:
         with:
           name: playwright-artifacts
           path: test-results/
+          if-no-files-found: ignore
