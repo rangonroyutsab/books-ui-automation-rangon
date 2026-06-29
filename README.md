@@ -1,8 +1,9 @@
-# Enterprise UI Automation Framework – Books to Scrape
+# Books UI Automation Project
 
 ## Project Overview
 
-This project is a UI automation testing framework for the Books to Scrape website.
+This project contains automated UI tests for the [Books to Scrape](https://books.toscrape.com/index.html) website using **Python**, **Pytest**, and **Playwright**.
+
 
 Target website:
 
@@ -10,35 +11,46 @@ Target website:
 https://books.toscrape.com/index.html
 ```
 
+---
 
 ## Features
 
-* Homepage validation
-* Page URL and title verification
-* Heading visibility validation
-* Book section visibility validation
-* Random book navigation validation
-* Book title verification between homepage and details page
-* Book price consistency validation
+The project covers the main user-facing parts of the Books to Scrape website.
+
+Current test coverage includes:
+
+* Homepage loading and URL validation
+* Page title verification
+* Homepage heading visibility
+* Book section visibility
+* Random book navigation from homepage to details page
+* Book title matching between homepage and details page
+* Book price consistency checking
 * Broken link validation
 * Product image validation
-* Pagination-based image validation
+* Pagination-based image checking
 * HTML report generation
 * Allure result generation
-* Screenshot capture on failure
-* Video recording on failure
-* Trace retention on failure
+* Screenshot, video, and trace retention for failed tests
 
+---
 
 ## Tech Stack
 
-Python 
-Pytest           
-Playwright 
-GitHub Actions 
+This project uses:
 
+```text
+Python
+Pytest
+Playwright
+pytest-html
+allure-pytest
+GitHub Actions
+```
 
-## Installation Guide
+---
+
+## Installation
 
 Clone the repository:
 
@@ -65,7 +77,7 @@ Activate the virtual environment on Windows PowerShell:
 .venv\Scripts\Activate.ps1
 ```
 
-Install project dependencies:
+Install the required Python packages:
 
 ```bash
 pip install -r requirements.txt
@@ -77,10 +89,11 @@ Install Playwright browsers:
 playwright install
 ```
 
+---
 
-## Environment Setup
+## Dependencies
 
-The project uses the following dependencies:
+The project uses the following main dependencies:
 
 ```text
 pytest
@@ -93,11 +106,21 @@ python-dotenv
 ruff
 ```
 
-The main Pytest configuration is stored in `pytest.ini`.
-The shared Pytest setup is stored in `conftest.py`.
+The main Pytest settings are stored in:
 
+```text
+pytest.ini
+```
 
-## Running Tests
+Shared test configuration and Playwright setup are stored in:
+
+```text
+conftest.py
+```
+
+---
+
+## Running the Tests
 
 Run all tests:
 
@@ -105,13 +128,13 @@ Run all tests:
 pytest
 ```
 
-Run tests with live browser view:
+Run tests with the browser visible:
 
 ```bash
 pytest --headed
 ```
 
-Run tests with live browser view, video on and slow motion:
+Run tests with browser view, video enabled, and slow motion:
 
 ```bash
 pytest --headed --slowmo=300 --video=on
@@ -129,6 +152,7 @@ Run a specific test case:
 pytest tests/test_homepage.py::test_homepage_loads_successfully
 ```
 
+---
 
 ## Project Structure
 
@@ -175,25 +199,29 @@ books-ui-automation/
 └── README.md
 ```
 
+---
+
 ## Test Case Coverage
 
-| Test Case                         | File                                  | Coverage                                                       |
-| --------------------------------- | ------------------------------------- | -------------------------------------------------------------- |
-| Homepage Validation               | `tests/test_homepage.py`              | Validates homepage URL, title, headings, and book section      |
-| Random Book Navigation Validation | `tests/test_book_navigation.py`       | Selects 5 random books and verifies details page navigation    |
-| Book Data Consistency Validation  | `tests/test_book_data_consistency.py` | Compares homepage book title and price with details page data  |
-| Broken Link Validation            | `tests/test_broken_links.py`          | Collects homepage links and verifies successful HTTP responses |
-| Product Image Validation          | `tests/test_product_images.py`        | Validates product images and pagination for up to 5 pages      |
+| Test Area             | File                                  | What It Checks                                                              |
+| --------------------- | ------------------------------------- | --------------------------------------------------------------------------- |
+| Homepage validation   | `tests/test_homepage.py`              | Checks homepage URL, title, heading, and book section                       |
+| Book navigation       | `tests/test_book_navigation.py`       | Opens random books and verifies details page navigation                     |
+| Book data consistency | `tests/test_book_data_consistency.py` | Compares book title and price between homepage and details page             |
+| Broken links          | `tests/test_broken_links.py`          | Collects homepage links and checks whether they return successful responses |
+| Product images        | `tests/test_product_images.py`        | Checks product images across multiple listing pages                         |
 
-## Report Generation Guide
+---
 
-Run the full test suite:
+## Report Generation
+
+Run the test suite:
 
 ```bash
 pytest
 ```
 
-Generated outputs:
+After the test run, the following outputs may be generated:
 
 ```text
 reports/html-report.html
@@ -201,17 +229,19 @@ allure-results/
 test-results/
 ```
 
-The `test-results/` folder contains Playwright artifacts such as videos, screenshots, and trace files depending on the configured options.
+The `test-results/` folder stores Playwright artifacts such as screenshots, videos, and trace files depending on the test result and configuration.
 
 Current artifact behavior:
 
 ```text
-Screenshots: only on failure
+Screenshots: captured on failure
 Videos: retained on failure
 Traces: retained on failure
 ```
 
-## HTML Report Guide
+---
+
+## HTML Report
 
 The HTML report is generated using `pytest-html`.
 
@@ -221,24 +251,27 @@ Run:
 pytest
 ```
 
-HTML report path:
+Report path:
 
 ```text
 reports/html-report.html
 ```
 
+Open the file in a browser to view the test summary.
 
-## Allure Report Guide
+---
 
-The project uses `allure-pytest` to generate Allure result files.
+## Allure Report
 
-Run tests:
+This project also supports Allure result generation using `allure-pytest`.
+
+Run tests normally:
 
 ```bash
 pytest
 ```
 
-Allure results are generated inside:
+Allure result files are generated inside:
 
 ```text
 allure-results/
@@ -250,7 +283,7 @@ To generate Allure results explicitly:
 pytest --alluredir=allure-results
 ```
 
-To view the Allure report, the Allure CLI must be installed separately.
+To view the Allure report, the Allure CLI needs to be installed separately.
 
 Install Allure CLI:
 
@@ -258,109 +291,66 @@ Install Allure CLI:
 npm install -g allure-commandline
 ```
 
-Verify installation:
+Check the installation:
 
 ```bash
 allure --version
 ```
 
-Serve the Allure report:
+Serve the report:
 
 ```bash
 allure serve allure-results
 ```
 
+---
 
-## GitHub Actions Setup
+## GitHub Actions
 
-The GitHub Actions workflow file should be located at:
+The GitHub Actions workflow file is located at:
 
 ```text
 .github/workflows/playwright.yml
 ```
 
-Example workflow:
+The workflow runs the automation tests when code is pushed to the `main` or `master` branch, and also when a pull request is created for those branches.
 
-```yaml
-name: Playwright Pytest Automation
 
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+---
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+## Design Choices
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+Page Object Model pattern has been used to keep the tests easier to read and maintain.
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+The test files mainly contain the validation steps, while the page classes inside the `pages/` folder contain selectors and reusable browser actions. This makes the tests cleaner because the same page methods can be reused in multiple test cases.
 
-      - name: Install Playwright browsers
-        run: |
-          playwright install --with-deps
+Common helper functions are kept inside the `utils/` folder. For example, URL-related logic and random item selection are separated from the test files to avoid repeating the same code.
 
-      - name: Run automation tests
-        run: |
-          pytest
+Reusable values such as the base URL are stored inside:
 
-      - name: Upload HTML report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: html-report
-          path: reports/
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results/
-
-      - name: Upload Playwright artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-artifacts
-          path: test-results/
+```text
+test_data/constants.py
 ```
 
-The workflow runs automatically when code is pushed to the `main` or `master` branch and when a pull request is created for those branches.
+This keeps the test files simpler and avoids hardcoding the same value in multiple places.
 
-## Design Decisions
 
-The framework uses the Page Object Model pattern to separate page-specific locators and actions from test cases.
+Playwright’s built-in waiting behavior is used instead of adding hardcoded sleep statements. This helps make the tests more stable.
 
-Test files contain only validation logic, while page classes contain reusable browser interaction methods. This makes the framework easier to maintain and extend.
-
-Reusable helper functions are placed inside the `utils/` directory. This avoids duplicate logic for common tasks such as random item selection and URL normalization.
-
-Reusable test values are placed inside `test_data/constants.py`. This avoids repeated hardcoded values across multiple test files.
-
-Pytest markers are used to organize test cases by category, such as `smoke`, `regression`, `navigation`, `data`, `links`, and `images`.
-
-Playwright's built-in auto-waiting and assertion mechanisms are used instead of hardcoded waits. This improves test stability and reliability.
-
-The framework is configured to generate reports and artifacts automatically so that test execution results can be reviewed locally and in CI/CD.
+---
 
 ## Known Limitations
 
-* The tests depend on the public availability of the Books to Scrape website.
-* Network issues may affect broken link validation.
-* Random book selection may select different books in different test runs.
-* Allure report viewing requires Allure CLI to be installed separately.
-* Product image validation is limited to a maximum of 5 pages.
-* The current framework uses Chromium by default.
+* The tests depend on the public Books to Scrape website being available.
+* Broken link tests may be affected by network issues or temporary server problems.
+* Random book selection may choose different books in different test runs.
+* Product image validation is currently limited to a maximum of 5 pages.
+* Allure report viewing requires the Allure CLI to be installed separately.
+* The current setup uses Chromium by default.
+
+---
+
+## Author 
+
+Rangon Roy Utsab
