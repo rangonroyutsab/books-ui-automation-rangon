@@ -10,6 +10,10 @@ Target website:
 ```text
 https://books.toscrape.com/index.html
 ```
+Published Allure Report:
+
+**[https://rangonroyutsab.github.io/books-ui-automation-rangon/](https://rangonroyutsab.github.io/books-ui-automation-rangon/)**
+
 
 ---
 
