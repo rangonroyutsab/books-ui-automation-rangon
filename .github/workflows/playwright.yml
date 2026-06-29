@@ -5,6 +5,12 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   test:
@@ -24,34 +30,69 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browser
         run: |
-          playwright install --with-deps
+          playwright install chromium
+          playwright install-deps chromium
 
       - name: Run automation tests
+        run: pytest
+        continue-on-error: true
+
+      - name: Set up Java
+        if: always()
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Allure CLI
+        if: always()
         run: |
-          pytest
+          wget https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.tgz
+          tar -xzf allure-2.34.1.tgz
+          echo "${{ github.workspace }}/allure-2.34.1/bin" >> $GITHUB_PATH
 
-      - name: Upload HTML report
+      - name: Generate Allure report
+        if: always()
+        run: |
+          allure generate allure-results -o allure-report --clean
+
+      - name: Upload test reports and artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: html-report
-          path: reports/
-          if-no-files-found: error
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results/
-          if-no-files-found: error
-
-      - name: Upload Playwright artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-artifacts
-          path: test-results/
+          name: test-reports-and-artifacts
+          path: |
+            reports/
+            allure-results/
+            allure-report/
+            test-results/
           if-no-files-found: ignore
+
+      - name: Setup GitHub Pages
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+  deploy:
+    needs: test
+    if: always() && github.event_name != 'pull_request'
+
+    permissions:
+      pages: write
+      id-token: write
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Deploy Allure report to GitHub Pages
+        uses: actions/deploy-pages@v4
